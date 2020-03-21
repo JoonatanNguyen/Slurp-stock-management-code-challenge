@@ -13,5 +13,7 @@ namespace SlurpStockManagement.Models
         public int Available { get; set; }
 
         public int Reserved { get; set; }
+
+        public int Pending { get; set; }
     }
 }

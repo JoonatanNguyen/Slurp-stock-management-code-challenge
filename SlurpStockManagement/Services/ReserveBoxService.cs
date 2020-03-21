@@ -10,40 +10,53 @@ namespace SlurpStockManagement.Services
     public class ReserveBoxService : IReserveBoxServices
     {
         private readonly IBoxRepository _boxRepository;
+        private CoffeeBagSize size200;
+        private CoffeeBagSize size400;
+        private CoffeeBagSize size1000;
+        private int boxSizeWidth;
+        private int boxSizeHeight;
+        private int boxSizeLength;
 
-        public ReserveBoxService(IBoxRepository boxRepository)
+        public ReserveBoxService(IBoxRepository boxRepository, ICoffeeBagSettings coffeeBagSizesettings, IBoxSizeSettings boxSizeSettings)
         {
             _boxRepository = boxRepository;
+            size200 = coffeeBagSizesettings.Size200;
+            size400 = coffeeBagSizesettings.Size400;
+            size1000 = coffeeBagSizesettings.Size1000;
+            boxSizeWidth = boxSizeSettings.Width;
+            boxSizeHeight = boxSizeSettings.Height;
+            boxSizeLength = boxSizeSettings.Length;
         }
 
         public ActionResult ReserveBox(List<CoffeeOrderItem> order)
         {
             Box boxesInStock = _boxRepository.GetBoxes();
-            int boxVolume = 60 * 60 * 60;
-            int coffeeBag200gramsVolume = 16 * 23 * 2;
-            int coffeeBag400gramsVolume = 22 * 26 * 2;
-            int coffeeBag1000gramsVolume = 14 * 26 * 10;
-            int volume = 0;
+
+            int boxVolume = boxSizeWidth * boxSizeHeight * boxSizeLength;
+            int coffeeBag200gramsVolume = size200.Width * size200.Height * size200.Length;
+            int coffeeBag400gramsVolume = size400.Width * size400.Height * size400.Length;
+            int coffeeBag1000gramsVolume = size1000.Width * size1000.Height * size1000.Length;
+            int coffeeBagsVolume = 0;
 
             foreach (CoffeeOrderItem orderItem in order)
             {
                 switch(orderItem.OrderSize)
                 {
                     case 200:
-                        volume += orderItem.Quantity * coffeeBag200gramsVolume;
+                        coffeeBagsVolume += orderItem.Quantity * coffeeBag200gramsVolume;
                         break;
                     case 400:
-                        volume += orderItem.Quantity * coffeeBag400gramsVolume;
+                        coffeeBagsVolume += orderItem.Quantity * coffeeBag400gramsVolume;
                         break;
                     case 1000:
-                        volume += orderItem.Quantity * coffeeBag1000gramsVolume;
+                        coffeeBagsVolume += orderItem.Quantity * coffeeBag1000gramsVolume;
                         break;
                     default:
                         break;
                 }
             }
-            double neededBoxes = (double)volume / boxVolume;
-
+            double neededBoxes = (double)coffeeBagsVolume / boxVolume;
+            
             if(neededBoxes < 1 && neededBoxes != 0)
             {
                 neededBoxes = 1;

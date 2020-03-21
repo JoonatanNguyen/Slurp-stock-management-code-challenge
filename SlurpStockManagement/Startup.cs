@@ -26,9 +26,13 @@ namespace SlurpStockManagement
         {
             services.Configure<CoffeeDatabaseSettings>(Configuration.GetSection(nameof(CoffeeDatabaseSettings)));
             services.Configure<BoxDatabaseSettings>(Configuration.GetSection(nameof(BoxDatabaseSettings)));
+            services.Configure<CoffeeBagSizeSettings>(Configuration.GetSection(nameof(CoffeeBagSizeSettings)));
+            services.Configure<BoxSizeSettings>(Configuration.GetSection(nameof(BoxSizeSettings)));
 
             services.AddSingleton<ICoffeeDatabaseSettings>(sp => sp.GetRequiredService<IOptions<CoffeeDatabaseSettings>>().Value);
             services.AddSingleton<IBoxDatabaseSettings>(sp => sp.GetRequiredService<IOptions<BoxDatabaseSettings>>().Value);
+            services.AddSingleton<ICoffeeBagSettings>(sp => sp.GetRequiredService<IOptions<CoffeeBagSizeSettings>>().Value);
+            services.AddSingleton<IBoxSizeSettings>(sp => sp.GetRequiredService<IOptions<BoxSizeSettings>>().Value);
 
             services.AddTransient<IReserveCoffeeService, ReserveCoffeeService>();
             services.AddTransient<IReserveBoxServices, ReserveBoxService>();
