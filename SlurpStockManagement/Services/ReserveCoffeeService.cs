@@ -24,16 +24,15 @@ namespace SlurpStockManagement.Services
             {
                 Coffee coffeeInStock = _coffeeRepository.GetCoffeeBySize(orderItem.OrderSize);
 
-                if (order[0].Quantity == 1)
+                if (coffeeInStock.Available < orderItem.Quantity)
                 {
-                    //coffeeInStock.Available < orderItem.Quantity
                     return new BadRequestObjectResult(Error.CoffeeOutOfStock);
                 }
                 else
                 {
-                    //coffeeInStock.Available -= orderItem.Quantity;
-                    //coffeeInStock.Reserved = orderItem.Quantity;
-                    //_coffeeRepository.ReserveCoffee(coffeeInStock);
+                    coffeeInStock.Available -= orderItem.Quantity;
+                    coffeeInStock.Reserved = orderItem.Quantity;
+                    _coffeeRepository.ReserveCoffee(coffeeInStock);
                     _reserveBoxServices.ReserveBox(order);
                 }
             }

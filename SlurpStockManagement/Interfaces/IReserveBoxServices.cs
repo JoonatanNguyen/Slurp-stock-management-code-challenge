@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 using SlurpStockManagement.Models;
 
 namespace SlurpStockManagement.Interfaces
 {
     public interface IReserveBoxServices
     {
-        void ReserveBox(List<CoffeeOrderItem> order);
+        ActionResult ReserveBox(List<CoffeeOrderItem> order);
     }
 }

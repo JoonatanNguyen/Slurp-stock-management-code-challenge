@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
+using SlurpStockManagement.Constants;
 using SlurpStockManagement.Interfaces;
 using SlurpStockManagement.Models;
 
@@ -14,7 +16,7 @@ namespace SlurpStockManagement.Services
             _boxRepository = boxRepository;
         }
 
-        public void ReserveBox(List<CoffeeOrderItem> order)
+        public ActionResult ReserveBox(List<CoffeeOrderItem> order)
         {
             Box boxesInStock = _boxRepository.GetBoxes();
             int boxVolume = 60 * 60 * 60;
@@ -41,19 +43,24 @@ namespace SlurpStockManagement.Services
                 }
             }
             double neededBoxes = (double)volume / boxVolume;
+
             if(neededBoxes < 1 && neededBoxes != 0)
             {
                 neededBoxes = 1;
-            }
-            else
+            } else
             {
                 neededBoxes = (int)Math.Ceiling(neededBoxes);
             }
-            if(boxesInStock.Available > neededBoxes)
+
+            if(boxesInStock.Available < neededBoxes)
+            {
+                return new BadRequestObjectResult(Error.CoffeeOutOfStock);
+            } else
             {
                 boxesInStock.Available -= (int)neededBoxes;
                 boxesInStock.Reserved = (int)neededBoxes;
                 _boxRepository.ReserveBox(boxesInStock);
+                return new OkResult();
             }
         }
     }
