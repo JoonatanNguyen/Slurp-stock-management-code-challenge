@@ -23,4 +23,12 @@
     <Compile Remove="Responses\ErrorResponse.cs" />
     <Compile Remove="Models\BagType.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Remove="mono_crash.42f6ec13c.1.json" />
+    <Content Remove="mono_crash.42f6ec13c.0.json" />
+    <Content Remove="mono_crash.42f6ec13c.2.json" />
+    <Content Remove="mono_crash.42f6ec13c.1.json" />
+    <Content Remove="mono_crash.42f6ec13c.0.json" />
+    <Content Remove="mono_crash.42f6ec13c.2.json" />
+  </ItemGroup>
 </Project>

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using SlurpStockManagement.Interfaces;
 using SlurpStockManagement.Models;
 
@@ -16,14 +14,14 @@ namespace SlurpStockManagement.Repositories
             var database = client.GetDatabase(settings.DatabaseName);
 
             _coffee = database.GetCollection<Coffee>(settings.CoffeesCollectionName);
-        }        
+        }
 
         public Coffee GetCoffeeBySize(int orderSize)
         {
             return _coffee.Find(coffee => coffee.OrderSize == orderSize).FirstOrDefault();
         }
 
-        public Boolean ReserveCoffee(Coffee updatedCoffee)
+        public bool ReserveCoffee(Coffee updatedCoffee)
         {
             return _coffee.ReplaceOne(coffee => coffee.OrderSize == updatedCoffee.OrderSize, updatedCoffee).IsAcknowledged;
         }
