@@ -67,7 +67,12 @@ namespace SlurpStockManagement.Services
 
             if(boxesInStock.Available < neededBoxes)
             {
-                return new BadRequestObjectResult(Error.CoffeeOutOfStock);
+                int pendingBox = (int)(neededBoxes - boxesInStock.Available);
+                boxesInStock.Available = 0;
+                boxesInStock.Pending = pendingBox;
+                _boxRepository.ReserveBox(boxesInStock);
+                return new OkResult();
+
             } else
             {
                 boxesInStock.Available -= (int)neededBoxes;

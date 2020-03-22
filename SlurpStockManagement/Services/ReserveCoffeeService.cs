@@ -20,6 +20,24 @@ namespace SlurpStockManagement.Services
 
         public ActionResult ReserveCoffee(List<CoffeeOrderItem> order)
         {
+            if (IsCoffeeAvailable(order).Count > 0)
+            {
+                List<int> bagType = IsCoffeeAvailable(order);
+                string coffeeBagTypeCode= "";
+                string coffeeBagTypeMessage = "";
+
+                foreach (int type in bagType)
+                {
+                    coffeeBagTypeCode += $"{type.ToString()}-grams-";
+                    coffeeBagTypeMessage += $"{type.ToString()} grams, ";
+                }
+                return new BadRequestObjectResult(
+                    new Error(
+                        $"coffee-size-{coffeeBagTypeCode}out-of-stock",
+                        $"Coffee size {coffeeBagTypeMessage.Remove(coffeeBagTypeMessage.LastIndexOf(", "))} out of stock")
+                );
+            }
+
             foreach (CoffeeOrderItem orderItem in order)
             {
                 Coffee coffeeInStock = _coffeeRepository.GetCoffeeBySize(orderItem.OrderSize);
@@ -36,7 +54,23 @@ namespace SlurpStockManagement.Services
                     _reserveBoxServices.ReserveBox(order);
                 }
             }
+            
             return new OkResult();
+        }
+
+        public List<int> IsCoffeeAvailable(List<CoffeeOrderItem> order)
+        {
+            List<int> outOfStockOrderSizes = new List<int>();
+            foreach (CoffeeOrderItem orderItem in order)
+            {
+                Coffee coffeeInStock = _coffeeRepository.GetCoffeeBySize(orderItem.OrderSize);
+                if (coffeeInStock.Available < orderItem.Quantity)
+                {
+                    outOfStockOrderSizes.Add(orderItem.OrderSize);
+                }
+                continue;
+            }
+            return outOfStockOrderSizes;
         }
     }
 }

@@ -21,5 +21,6 @@
     <Compile Remove="Models\EmptyClass.cs" />
     <Compile Remove="Models\MongoDBAttribute.cs" />
     <Compile Remove="Responses\ErrorResponse.cs" />
+    <Compile Remove="Models\BagType.cs" />
   </ItemGroup>
 </Project>
