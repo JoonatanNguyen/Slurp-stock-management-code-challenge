@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using SlurpStockManagement.Interfaces;
 
 namespace SlurpStockManagement.Models
@@ -12,6 +13,7 @@ namespace SlurpStockManagement.Models
 
     public class CoffeeBagSize
     {
+        public int Weight { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
         public int Length { get; set; }

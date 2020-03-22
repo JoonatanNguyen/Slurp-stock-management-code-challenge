@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using SlurpStockManagement.Constants;
 using SlurpStockManagement.Interfaces;
@@ -12,18 +11,26 @@ namespace SlurpStockManagement.Controllers
     public class ReserveController : ControllerBase
     {
         private readonly IReserveCoffeeService _reserveCoffeeService;
-        public ReserveController(IReserveCoffeeService reserveCoffeeService)
+        private readonly ICoffeeBagSettings _coffeeBagSettings;
+
+        public ReserveController(IReserveCoffeeService reserveCoffeeService, ICoffeeBagSettings coffeeBagSettings)
         {
             _reserveCoffeeService = reserveCoffeeService;
+            _coffeeBagSettings = coffeeBagSettings;
         }
 
         [HttpPut]
         public ActionResult ReserveCoffee([FromBody] ReserveCoffeeRequest request)
         {
-            if(request == null)
+            var coffeeBagWeightList = new List<int> { _coffeeBagSettings.Size200.Weight, _coffeeBagSettings.Size400.Weight, _coffeeBagSettings.Size1000.Weight };
+
+            foreach(CoffeeOrderItem orderItem in request.Order)
             {
-                return new BadRequestObjectResult(Error.InvalidInputs);
-            }
+                if (request == null || !coffeeBagWeightList.Contains(orderItem.OrderSize))
+                {
+                    return new BadRequestObjectResult(Error.InvalidInputs);
+                }
+            } 
             return _reserveCoffeeService.ReserveCoffee(request.Order);
         }
     }

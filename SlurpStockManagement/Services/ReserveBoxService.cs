@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using SlurpStockManagement.Constants;
 using SlurpStockManagement.Interfaces;
 using SlurpStockManagement.Models;
 
@@ -68,15 +67,16 @@ namespace SlurpStockManagement.Services
             if(boxesInStock.Available < neededBoxes)
             {
                 int pendingBox = (int)(neededBoxes - boxesInStock.Available);
+                boxesInStock.Reserved += boxesInStock.Available;
                 boxesInStock.Available = 0;
-                boxesInStock.Pending = pendingBox;
+                boxesInStock.Pending += pendingBox;
                 _boxRepository.ReserveBox(boxesInStock);
                 return new OkResult();
 
             } else
             {
                 boxesInStock.Available -= (int)neededBoxes;
-                boxesInStock.Reserved = (int)neededBoxes;
+                boxesInStock.Reserved += (int)neededBoxes;
                 _boxRepository.ReserveBox(boxesInStock);
                 return new OkResult();
             }

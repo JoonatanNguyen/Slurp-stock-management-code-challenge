@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using SlurpStockManagement.Constants;
 using SlurpStockManagement.Interfaces;
@@ -49,12 +48,11 @@ namespace SlurpStockManagement.Services
                 else
                 {
                     coffeeInStock.Available -= orderItem.Quantity;
-                    coffeeInStock.Reserved = orderItem.Quantity;
+                    coffeeInStock.Reserved += orderItem.Quantity;
                     _coffeeRepository.ReserveCoffee(coffeeInStock);
-                    _reserveBoxServices.ReserveBox(order);
                 }
             }
-            
+            _reserveBoxServices.ReserveBox(order);
             return new OkResult();
         }
 

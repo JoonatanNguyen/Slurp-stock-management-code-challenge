@@ -1,5 +1,4 @@
-﻿using System;
-using SlurpStockManagement.Models;
+﻿using SlurpStockManagement.Models;
 
 namespace SlurpStockManagement.Interfaces
 {
