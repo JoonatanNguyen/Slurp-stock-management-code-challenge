@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using SlurpStockManagement.Constants;
 using SlurpStockManagement.Interfaces;
 using SlurpStockManagement.Models;
@@ -9,13 +10,17 @@ namespace SlurpStockManagement.Services
     public class ReserveCoffeeService : IReserveCoffeeService
     {
         private readonly ICoffeeRepository _coffeeRepository;
-        private readonly IReserveBoxServices _reserveBoxServices;
+        private readonly IReserveBoxService _reserveBoxServices;
+        private readonly IHubContext<RealTimeUpdate> _hubContext;
 
-        public ReserveCoffeeService(ICoffeeRepository coffeeRepository, IReserveBoxServices reserveBoxServices)
+        public ReserveCoffeeService(ICoffeeRepository coffeeRepository, IReserveBoxService reserveBoxServices, IHubContext<RealTimeUpdate> hubContext)
         {
             _coffeeRepository = coffeeRepository;
             _reserveBoxServices = reserveBoxServices;
+            _hubContext = hubContext;
         }
+
+        public ActionResult<List<Coffee>> GetCoffeeInStock() => _coffeeRepository.Get();
 
         public ActionResult ReserveCoffee(List<CoffeeOrderItem> order)
         {
@@ -39,6 +44,8 @@ namespace SlurpStockManagement.Services
                     _coffeeRepository.ReserveCoffee(coffeeInStock);
                 }
                 _reserveBoxServices.ReserveBox(order);
+                _hubContext.Clients.All.SendAsync("update");
+
                 return new OkResult();
             }
             catch

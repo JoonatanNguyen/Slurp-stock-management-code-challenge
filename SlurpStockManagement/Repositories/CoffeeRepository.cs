@@ -1,4 +1,6 @@
-﻿using MongoDB.Driver;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 using SlurpStockManagement.Interfaces;
 using SlurpStockManagement.Models;
 
@@ -15,6 +17,8 @@ namespace SlurpStockManagement.Repositories
 
             _coffee = database.GetCollection<Coffee>(settings.CoffeesCollectionName);
         }
+
+        public ActionResult<List<Coffee>> Get() => _coffee.Find(coffee => true).ToList();
 
         public Coffee GetCoffeeBySize(int orderSize)
         {

@@ -8,5 +8,6 @@ namespace SlurpStockManagement.Interfaces
     public interface IReserveCoffeeService
     {
         ActionResult ReserveCoffee(List<CoffeeOrderItem> order);
+        ActionResult<List<Coffee>> GetCoffeeInStock();
     }
 }

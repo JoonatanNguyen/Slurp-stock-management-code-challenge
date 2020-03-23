@@ -24,6 +24,14 @@ namespace SlurpStockManagement
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(c =>
+            {
+                c.AddPolicy("AllowOrigin", builder => builder.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
+            });
+
+            services.AddMvc();
+            services.AddSignalR();
+
             services.Configure<CoffeeDatabaseSettings>(Configuration.GetSection(nameof(CoffeeDatabaseSettings)));
             services.Configure<BoxDatabaseSettings>(Configuration.GetSection(nameof(BoxDatabaseSettings)));
             services.Configure<CoffeeBagSizeSettings>(Configuration.GetSection(nameof(CoffeeBagSizeSettings)));
@@ -35,7 +43,7 @@ namespace SlurpStockManagement
             services.AddSingleton<IBoxSizeSettings>(sp => sp.GetRequiredService<IOptions<BoxSizeSettings>>().Value);
 
             services.AddTransient<IReserveCoffeeService, ReserveCoffeeService>();
-            services.AddTransient<IReserveBoxServices, ReserveBoxService>();
+            services.AddTransient<IReserveBoxService, ReserveBoxService>();
 
             services.AddTransient<ICoffeeRepository, CoffeeRepository>();
             services.AddTransient<IBoxRepository, BoxRepository>();
@@ -55,6 +63,8 @@ namespace SlurpStockManagement
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors(options => options.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
+
             app.UseSwagger();
 
             app.UseSwaggerUI(c =>
@@ -70,8 +80,11 @@ namespace SlurpStockManagement
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<RealTimeUpdate>("/realTimeUpdate");
                 endpoints.MapControllers();
             });
+
+
         }
     }
 }

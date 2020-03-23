@@ -6,7 +6,7 @@ using SlurpStockManagement.Models;
 
 namespace SlurpStockManagement.Services
 {
-    public class ReserveBoxService : IReserveBoxServices
+    public class ReserveBoxService : IReserveBoxService
     {
         private readonly IBoxRepository _boxRepository;
         private readonly IBoxSizeSettings _boxSizeSettings;
@@ -22,6 +22,8 @@ namespace SlurpStockManagement.Services
             Size1000 = coffeeBagSizesettings.Size1000;
             _boxSizeSettings = boxSizeSettings;
         }
+
+        public ActionResult<Box> GetBoxInStock() => _boxRepository.GetBoxes();
 
         public ActionResult ReserveBox(List<CoffeeOrderItem> order)
         {

@@ -22,6 +22,7 @@
     <Compile Remove="Models\MongoDBAttribute.cs" />
     <Compile Remove="Responses\ErrorResponse.cs" />
     <Compile Remove="Models\BagType.cs" />
+    <Compile Remove="Interfaces\IRealTimeUpdate.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="mono_crash.42f6ec13c.1.json" />

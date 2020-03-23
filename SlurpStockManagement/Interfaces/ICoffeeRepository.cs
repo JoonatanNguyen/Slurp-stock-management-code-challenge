@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 using SlurpStockManagement.Models;
 
 namespace SlurpStockManagement.Interfaces
@@ -8,5 +9,6 @@ namespace SlurpStockManagement.Interfaces
     {
         Coffee GetCoffeeBySize(int orderSize);
         Boolean ReserveCoffee(Coffee updatedCoffee);
+        ActionResult<List<Coffee>> Get();
     }
 }

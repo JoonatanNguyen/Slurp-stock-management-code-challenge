@@ -7,19 +7,20 @@ using SlurpStockManagement.ViewModels;
 
 namespace SlurpStockManagement.Controllers
 {
-    [Route("api/order")]
-    public class ReserveController : ControllerBase
+    [Route("api/coffee")]
+    public class CoffeeController : ControllerBase
     {
         private readonly IReserveCoffeeService _reserveCoffeeService;
         private readonly ICoffeeBagSettings _coffeeBagSettings;
 
-        public ReserveController(IReserveCoffeeService reserveCoffeeService, ICoffeeBagSettings coffeeBagSettings)
+        public CoffeeController(IReserveCoffeeService reserveCoffeeService, ICoffeeBagSettings coffeeBagSettings)
         {
             _reserveCoffeeService = reserveCoffeeService;
             _coffeeBagSettings = coffeeBagSettings;
         }
 
         [HttpPut]
+        [Route("reserve")]
         public ActionResult ReserveCoffee([FromBody] ReserveCoffeeRequest request)
         {
             if (request == null)
@@ -37,5 +38,8 @@ namespace SlurpStockManagement.Controllers
             }
             return _reserveCoffeeService.ReserveCoffee(request.Order);
         }
+
+        [HttpGet]
+        public ActionResult<List<Coffee>> GetCoffeeInStock() => _reserveCoffeeService.GetCoffeeInStock();
     }
 }
