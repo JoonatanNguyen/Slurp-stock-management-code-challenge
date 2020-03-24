@@ -26,7 +26,7 @@ namespace SlurpStockManagement
         {
             services.AddCors(c =>
             {
-                c.AddPolicy("AllowOrigin", builder => builder.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
+                c.AddPolicy("AllowOrigin", builder => builder.WithOrigins("https://react-web-stock-management.azurewebsites.net").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
             });
 
             services.AddMvc();
@@ -63,7 +63,7 @@ namespace SlurpStockManagement
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors(options => options.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
+            app.UseCors(options => options.WithOrigins("https://react-web-stock-management.azurewebsites.net").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
 
             app.UseSwagger();
 
