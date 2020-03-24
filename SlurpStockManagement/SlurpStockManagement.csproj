@@ -23,6 +23,8 @@
     <Compile Remove="Responses\ErrorResponse.cs" />
     <Compile Remove="Models\BagType.cs" />
     <Compile Remove="Interfaces\IRealTimeUpdate.cs" />
+    <Compile Remove="WeatherForecast.cs" />
+    <Compile Remove="Controllers\WeatherForecastController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="mono_crash.42f6ec13c.1.json" />
