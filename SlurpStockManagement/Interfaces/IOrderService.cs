@@ -5,9 +5,10 @@ using SlurpStockManagement.Models;
 
 namespace SlurpStockManagement.Interfaces
 {
-    public interface IReserveBoxService
+    public interface IOrderService
     {
-        ActionResult<int> ReserveBox(List<CoffeeOrderItem> order);
-        ActionResult<Box> GetBoxInStock();
+        ActionResult<List<Order>> GetOrderList();
+
+        void CreateOrder(List<CoffeeOrderItem> order, int boxAmount);
     }
 }

@@ -25,7 +25,7 @@ namespace SlurpStockManagement.Services
 
         public ActionResult<Box> GetBoxInStock() => _boxRepository.GetBoxes();
 
-        public ActionResult ReserveBox(List<CoffeeOrderItem> order)
+        public ActionResult<int> ReserveBox(List<CoffeeOrderItem> order)
         {
             try
             {
@@ -41,6 +41,11 @@ namespace SlurpStockManagement.Services
                 boxesInStock.Available = isNotEnoughBoxesInStock ? 0 : boxesInStock.Available - neededBoxes;
                 boxesInStock.Pending = isNotEnoughBoxesInStock ? boxesInStock.Pending + pendingBox : boxesInStock.Pending;
                 _boxRepository.ReserveBox(boxesInStock);
+
+                if (neededBoxes != null)
+                {
+                    return neededBoxes;
+                }
                 return new OkResult();
             }
             catch

@@ -11,12 +11,19 @@ namespace SlurpStockManagement.Services
     {
         private readonly ICoffeeRepository _coffeeRepository;
         private readonly IReserveBoxService _reserveBoxServices;
+        private readonly IOrderService _orderService;
         private readonly IHubContext<RealTimeUpdate> _hubContext;
 
-        public ReserveCoffeeService(ICoffeeRepository coffeeRepository, IReserveBoxService reserveBoxServices, IHubContext<RealTimeUpdate> hubContext)
+        public ReserveCoffeeService(
+            ICoffeeRepository coffeeRepository,
+            IReserveBoxService reserveBoxServices,
+            IOrderService orderService,
+            IHubContext<RealTimeUpdate> hubContext
+        )
         {
             _coffeeRepository = coffeeRepository;
             _reserveBoxServices = reserveBoxServices;
+            _orderService = orderService;
             _hubContext = hubContext;
         }
 
@@ -44,6 +51,8 @@ namespace SlurpStockManagement.Services
                     _coffeeRepository.ReserveCoffee(coffeeInStock);
                 }
                 _reserveBoxServices.ReserveBox(order);
+                var boxAmount = _reserveBoxServices.ReserveBox(order).Value;
+                _orderService.CreateOrder(order, boxAmount);
                 _hubContext.Clients.All.SendAsync("update");
 
                 return new OkResult();

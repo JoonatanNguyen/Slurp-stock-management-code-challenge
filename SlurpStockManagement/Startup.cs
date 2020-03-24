@@ -26,7 +26,7 @@ namespace SlurpStockManagement
         {
             services.AddCors(c =>
             {
-                c.AddPolicy("AllowOrigin", builder => builder.WithOrigins("http://react-web-stock-management.azurewebsites.net").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
+                c.AddPolicy("AllowOrigin", builder => builder.WithOrigins("http://localhost:3000", "http://react-web-stock-management.azurewebsites.net").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
             });
 
             services.AddMvc();
@@ -34,19 +34,23 @@ namespace SlurpStockManagement
 
             services.Configure<CoffeeDatabaseSettings>(Configuration.GetSection(nameof(CoffeeDatabaseSettings)));
             services.Configure<BoxDatabaseSettings>(Configuration.GetSection(nameof(BoxDatabaseSettings)));
+            services.Configure<OrderListDatabaseSettings>(Configuration.GetSection(nameof(OrderListDatabaseSettings)));
             services.Configure<CoffeeBagSizeSettings>(Configuration.GetSection(nameof(CoffeeBagSizeSettings)));
             services.Configure<BoxSizeSettings>(Configuration.GetSection(nameof(BoxSizeSettings)));
 
             services.AddSingleton<ICoffeeDatabaseSettings>(sp => sp.GetRequiredService<IOptions<CoffeeDatabaseSettings>>().Value);
             services.AddSingleton<IBoxDatabaseSettings>(sp => sp.GetRequiredService<IOptions<BoxDatabaseSettings>>().Value);
+            services.AddSingleton<IOrderListDatabaseSettings>(sp => sp.GetRequiredService<IOptions<OrderListDatabaseSettings>>().Value);
             services.AddSingleton<ICoffeeBagSettings>(sp => sp.GetRequiredService<IOptions<CoffeeBagSizeSettings>>().Value);
             services.AddSingleton<IBoxSizeSettings>(sp => sp.GetRequiredService<IOptions<BoxSizeSettings>>().Value);
 
             services.AddTransient<IReserveCoffeeService, ReserveCoffeeService>();
             services.AddTransient<IReserveBoxService, ReserveBoxService>();
+            services.AddTransient<IOrderService, OrderService>();
 
             services.AddTransient<ICoffeeRepository, CoffeeRepository>();
             services.AddTransient<IBoxRepository, BoxRepository>();
+            services.AddTransient<IOrderRepository, OrderRepository>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -63,7 +67,7 @@ namespace SlurpStockManagement
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors(options => options.WithOrigins("http://react-web-stock-management.azurewebsites.net").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
+            app.UseCors(options => options.WithOrigins("http://localhost:3000", "http://react-web-stock-management.azurewebsites.net").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
 
             app.UseSwagger();
 

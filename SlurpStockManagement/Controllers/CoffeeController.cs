@@ -28,13 +28,14 @@ namespace SlurpStockManagement.Controllers
                 return new BadRequestObjectResult(Error.InvalidInputs);
             }
             var coffeeBagWeightList = new List<int> { _coffeeBagSettings.Size200.Weight, _coffeeBagSettings.Size400.Weight, _coffeeBagSettings.Size1000.Weight };
-
+            List<int> addedOrderItem = new List<int>();
             foreach (CoffeeOrderItem orderItem in request.Order)
             {
-                if (!coffeeBagWeightList.Contains(orderItem.OrderSize))
+                if (!coffeeBagWeightList.Contains(orderItem.OrderSize) || addedOrderItem.Contains(orderItem.OrderSize))
                 {
                     return new BadRequestObjectResult(Error.InvalidInputs);
                 }
+                addedOrderItem.Add(orderItem.OrderSize);
             }
             return _reserveCoffeeService.ReserveCoffee(request.Order);
         }
